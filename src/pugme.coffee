@@ -17,9 +17,10 @@ module.exports = (robot) ->
     msg.http("http://pugme.herokuapp.com/random")
       .get() (err, res, body) ->
         if robot.adapterName is "telegram"
+          _pug = JSON.parse(body).pug.replace(new RegExp('[0-9][0-9].media', 'g'), 'media')
           robot.emit 'telegram:invoke', 'sendPhoto', {
             chat_id: msg.envelope.room
-            photo: JSON.parse(body).pug
+            photo: _pug
           }, (error, response) ->
             if error != null
               robot.logger.error error
@@ -33,6 +34,7 @@ module.exports = (robot) ->
       .get() (err, res, body) ->
         if robot.adapterName is "telegram"
           for pug in JSON.parse(body).pugs
+            pug = pug.replace(new RegExp('[0-9][0-9].media', 'g'), 'media')
             robot.emit 'telegram:invoke', 'sendPhoto', {
               chat_id: msg.envelope.room
               photo: pug
