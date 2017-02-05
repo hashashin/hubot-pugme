@@ -32,14 +32,14 @@ module.exports = (robot) ->
     msg.http("http://pugme.herokuapp.com/bomb?count=" + count)
       .get() (err, res, body) ->
         if robot.adapterName is "telegram"
-          robot.emit 'telegram:invoke', 'sendPhoto', {
-            chat_id: msg.envelope.room
-            photo: pug
-          }, (error, response) ->
-            if error != null
-              robot.logger.error error
-            robot.logger.debug response
           for pug in JSON.parse(body).pugs
+            robot.emit 'telegram:invoke', 'sendPhoto', {
+              chat_id: msg.envelope.room
+              photo: pug
+            }, (error, response) ->
+              if error != null
+                robot.logger.error error
+              robot.logger.debug response
         else
           msg.send pug for pug in JSON.parse(body).pugs
 
