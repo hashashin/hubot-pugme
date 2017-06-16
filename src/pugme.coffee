@@ -26,7 +26,7 @@ module.exports = (robot) ->
               robot.logger.error error
             robot.logger.debug response
         else
-          msg.send JSON.parse(body).pug
+          msg.send JSON.parse(body).pug.replace(new RegExp('[0-9][0-9].media', 'g'), 'media')
 
   robot.respond /pug bomb( (\d+))?/i, (msg) ->
     count = msg.match[2] || 5
@@ -43,7 +43,7 @@ module.exports = (robot) ->
                 robot.logger.error error
               robot.logger.debug response
         else
-          msg.send pug for pug in JSON.parse(body).pugs
+          msg.send pug.replace(new RegExp('[0-9][0-9].media', 'g'), 'media') for pug in JSON.parse(body).pugs
 
   robot.respond /how many pugs are there/i, (msg) ->
     msg.http("https://pugme.herokuapp.com/count")
